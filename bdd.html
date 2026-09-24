@@ -1,0 +1,566 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Винтажное поздравление для Папы</title>
+    <style>
+        /* ПОЛНЫЙ ЗАПРЕТ СКРУГЛЕНИЙ ДЛЯ ВСЕХ ЭЛЕМЕНТОВ СТРАНИЦЫ (кроме кружевного круга фона) */
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+            border-radius: 0;
+        }
+
+        body {
+            font-family: 'Times New Roman', Times, Baskerville, Georgia, serif;
+            height: 100vh;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            overflow: hidden;
+            position: relative;
+            /* ФОН СТРАНИЦЫ */
+            background-image: url('photo.jpg'), url('https://unsplash.com');
+            background-size: cover;
+            background-position: center;
+            background-repeat: no-repeat;
+        }
+
+        /* Глубокий бордово-красный винтажный оверлей */
+        body::before {
+            content: '';
+            position: absolute;
+            top: 0; left: 0; right: 0; bottom: 0;
+            background: linear-gradient(135deg, rgba(0, 0, 0, 0.3), rgba(0, 0, 0, 0.3));
+            z-index: 1;
+        }
+
+        /* ФАКТУРА СТАРИННОЙ БУМАГИ */
+        .vintage-paper {
+            background-color: #f4edd2;
+            background-image:
+                radial-gradient(rgba(139, 69, 19, 0.04) 1px, transparent 0),
+                linear-gradient(to right, rgba(0,0,0,0.02) 1px, transparent 1px),
+                linear-gradient(to bottom, rgba(0,0,0,0.02) 1px, transparent 1px);
+            background-size: 3px 3px, 15px 15px, 15px 15px;
+            box-shadow:
+                inset 0 0 50px rgba(139, 69, 19, 0.15),
+                0 15px 35px rgba(0, 0, 0, 0.4);
+            border: 1px solid #d3c29d;
+        }
+
+        /* Центральное винтажное письмо */
+        .card {
+            padding: 50px 40px;
+            text-align: center;
+            max-width: 480px;
+            width: 90%;
+            z-index: 10;
+            transform: scale(0.9) rotate(10deg);
+            opacity: 0;
+            animation: fadeInLetter 1.2s forwards cubic-bezier(0.175, 0.885, 0.32, 1.1);
+            animation-delay: 0.2s;
+
+            transform: scale(0.9) rotate(10deg);
+        }
+
+        h1 {
+            color: #800000;
+            font-size: 2.6rem;
+            font-style: italic;
+            margin-bottom: 25px;
+            letter-spacing: 1px;
+            border-bottom: 1px dashed rgba(128, 0, 0, 0.3);
+            padding-bottom: 12px;
+        }
+
+        p {
+            color: #2e251a;
+            font-size: 1.25rem;
+            line-height: 1.6;
+            text-align: justify;
+            text-indent: 25px;
+        }
+
+        /* БАЗОВЫЙ БЛОК ДЛЯ БОКОВЫХ КАРТОЧЕК */
+        .photo-block {
+            position: absolute;
+            display: flex;
+            align-items: center;
+            z-index: 5;
+            opacity: 0;
+        }
+
+        /* CSS-АНИМАЦИЯ ДЛЯ ВЫЕЗДА ЛЕВЫХ КАРТОЧЕК */
+        .photo-block.left-side {
+            flex-direction: row;
+            left: -550px;
+            animation: slideInLeft 1.5s forwards cubic-bezier(0.175, 0.885, 0.32, 1.1);
+            animation-delay: 0.4s;
+        }
+
+        .left-side.pos-1 { top: 6%; animation-name: slideInLeftPos1; }
+        /* Позиция 2 сдвинута ближе к центру (left: 14% вместо 4%) */
+        .left-side.pos-2 { top: 38%; animation-name: slideInLeftPos2; z-index: 6; }
+        .left-side.pos-3 { bottom: 6%; animation-name: slideInLeftPos3; }
+
+        @keyframes slideInLeftPos1 { to { left: 3%; transform: rotate(-3deg); opacity: 1; } }
+        @keyframes slideInLeftPos2 { to { left: 20%; transform: rotate(2deg); opacity: 1; } }
+        @keyframes slideInLeftPos3 { to { left: 4%; transform: rotate(-1deg); opacity: 1; } }
+
+        /* CSS-АНИМАЦИЯ ДЛЯ ВЫЕЗДА ПРАВЫХ КАРТОЧЕК */
+        .photo-block.right-side {
+            flex-direction: row-reverse;
+            right: -550px;
+            animation: slideInRight 1.5s forwards cubic-bezier(0.175, 0.885, 0.32, 1.1);
+            animation-delay: 0.4s;
+        }
+
+        .right-side.pos-1 { top: 6%; animation-name: slideInRightPos1; }
+        /* Позиция 2 сдвинута ближе к центру (right: 20% вместо 4%) */
+        .right-side.pos-2 { top: 38%; animation-name: slideInRightPos2; z-index: 6; }
+        .right-side.pos-3 { bottom: 6%; animation-name: slideInRightPos3; }
+
+        @keyframes slideInRightPos1 { to { right: 3%; transform: rotate(3deg); opacity: 1; } }
+        @keyframes slideInRightPos2 { to { right: 14%; transform: rotate(-2deg); opacity: 1; } }
+        @keyframes slideInRightPos3 { to { right: 4%; transform: rotate(1deg); opacity: 1; } }
+
+        /* НАДЁЖНАЯ CSS-АНИМАЦИЯ ДЛЯ ЦЕНТРАЛЬНЫХ КАРТОЧЕК (Из-под текста) */
+        .center-photo-block {
+            position: absolute;
+            z-index: 2;
+            opacity: 0;
+            left: 50%;
+            animation: slideInCenter 1.8s forwards cubic-bezier(0.175, 0.885, 0.32, 1.1);
+            animation-delay: 0.5s;
+        }
+
+        .center-photo-block.top-center {
+            top: 30%;
+            transform: translate(-50%, -50%) scale(0.6);
+            animation-name: slideInCenterTop;
+        }
+        .center-photo-block.bottom-center {
+            bottom: 30%;
+            transform: translate(-50%, 20%) scale(0.6);
+            animation-name: slideInCenterBottom;
+        }
+
+        @keyframes slideInCenterTop { to { top: 16%; transform: translate(-150%, -50%) rotate(2deg); opacity: 1; } }
+        @keyframes slideInCenterBottom { to { bottom: 16%; transform: translate(50%, 50%) rotate(-2deg); opacity: 1; } }
+
+        /* КОНТЕЙНЕР ДЛЯ РАМКИ И КРУЖЕВА */
+        .frame-wrapper {
+            position: relative;
+            width: 280px;
+            height: 280px;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            flex-shrink: 0;
+        }
+
+        /* КРУЖЕВНОЙ КРУГ НА ФОНЕ РАМКИ */
+        .lace-circle-bg {
+            position: absolute;
+            width: 320px;
+            height: 320px;
+            background: rgba(255, 255, 255, 0.25);
+            border-radius: 50% !important;
+            z-index: -1;
+            border: 6px double rgba(255, 255, 255, 0.7);
+            outline: 6px dashed rgba(255, 255, 255, 0.4);
+            outline-offset: -16px;
+            box-shadow: 0 0 20px rgba(0, 0, 0, 0.15);
+        }
+
+        /* ВИНТАЖНЫЕ РАМКИ-ПАСПАРТУ */
+        .lace-frame {
+            width: 280px;
+            height: 280px;
+            padding: 16px;
+            box-shadow: 0 15px 40px rgba(0,0,0,0.5);
+            border: 1px solid #d3c29d;
+            position: relative;
+            background-color: #f4edd2;
+        }
+
+        .lace-frame::before {
+            content: '';
+            position: absolute;
+            top: 8px; left: 8px; right: 8px; bottom: 8px;
+            border: 1px dashed rgba(128, 0, 0, 0.25);
+            pointer-events: none;
+        }
+
+        .lace-frame img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            border: 1px solid rgba(0,0,0,0.15);
+            filter: sepia(0.2) contrast(0.95);
+        }
+
+        /* СТРОГИЕ БУМАЖНЫЕ ПОДПИСИ С ПЕРЕНОСОМ */
+        .photo-caption {
+            padding: 10px 20px;
+            font-size: 1.1rem;
+            font-weight: bold;
+            font-style: italic;
+            color: #800000;
+            border: 1px solid rgba(128, 0, 0, 0.25);
+            box-shadow: 4px 4px 12px rgba(0,0,0,0.15);
+            letter-spacing: 0.5px;
+            z-index: 6;
+
+            white-space: normal !important;
+            word-wrap: break-word !important;
+            word-break: break-word;
+            max-width: 160px;
+            text-align: center;
+        }
+
+        .left-side .photo-caption {
+            margin-left: -5px;
+            border-left: 4px solid #800000;
+        }
+
+        .right-side .photo-caption {
+            margin-right: -5px;
+            border-right: 4px solid #800000;
+        }
+
+        /* СТИЛИ ДЛЯ КНОПКИ И ПРИЗНАНИЯ */
+        .btn {
+            display: inline-block;
+            background: #800000;
+            color: #f4edd2;
+            font-family: inherit;
+            padding: 12px 28px;
+            font-weight: bold;
+            font-size: 1rem;
+            text-transform: uppercase;
+            letter-spacing: 2px;
+            border: 1px solid #4a0000;
+            cursor: pointer;
+            margin-top: 15px;
+            transition: all 0.3s ease;
+            box-shadow: 0 4px 8px rgba(0,0,0,0.3);
+        }
+
+        .btn:hover {
+            background: #a00000;
+            transform: translateY(-1px);
+            box-shadow: 0 6px 12px rgba(0,0,0,0.35);
+        }
+
+        .hidden-message {
+            max-height: 0;
+            opacity: 0;
+            overflow: hidden;
+            color: #800000;
+            font-size: 1.6rem;
+            font-style: italic;
+            font-weight: bold;
+            margin-top: 0;
+            line-height: 1.4;
+            border-top: 0px dashed rgba(128, 0, 0, 0);
+            padding-top: 0;
+            transition: all 0.8s cubic-bezier(0.175, 0.885, 0.32, 1.1);
+        }
+
+        .hidden-message.show {
+            max-height: 100px;
+            opacity: 1;
+            margin-top: 25px;
+            padding-top: 15px;
+            border-top: 1px dashed rgba(128, 0, 0, 0.3);
+        }
+
+        @keyframes fadeInLetter {
+            to { transform: scale(1) rotate(10deg); opacity: 1; }
+        }
+
+                /* АДАПТИВНОСТЬ ДЛЯ ЭКРАНОВ НОУТБУКОВ */
+        @media (max-width: 1600px) {
+            .frame-wrapper {
+                width: 220px;
+                height: 220px;
+            }
+            .lace-circle-bg {
+                width: 250px;
+                height: 250px;
+                outline-offset: -12px;
+            }
+            .lace-frame {
+                width: 220px;
+                height: 220px;
+                padding: 12px;
+            }
+            .photo-caption {
+                font-size: 0.95rem;
+                padding: 6px 12px;
+                max-width: 130px;
+            }
+
+            /* Сближенные боковые фото для ноутбуков */
+            @keyframes slideInLeftPos2 {
+                to { left: 12%; transform: rotate(2deg); opacity: 1; }
+            }
+            @keyframes slideInRightPos2 {
+                to { right: 12%; transform: rotate(-2deg); opacity: 1; }
+            }
+
+            /* Сближенные центральные фото для ноутбуков */
+            @keyframes slideInCenterTop {
+                to { top: 17%; transform: translate(-50%, -50%) rotate(2deg); opacity: 1; }
+            }
+            @keyframes slideInCenterBottom {
+                to { bottom: 17%; transform: translate(-50%, 50%) rotate(-2deg); opacity: 1; }
+            }
+        }
+
+        /* АДАПТИВНОСТЬ ДЛЯ МАЛЕНЬКИХ ПЛАНШЕТОВ */
+        @media (max-width: 1300px) {
+            .frame-wrapper {
+                width: 170px;
+                height: 170px;
+            }
+            .lace-circle-bg {
+                width: 195px;
+                height: 195px;
+                outline-offset: -10px;
+            }
+            .lace-frame {
+                width: 170px;
+                height: 170px;
+                padding: 10px;
+            }
+            .photo-caption {
+                font-size: 0.85rem;
+                padding: 6px 10px;
+                max-width: 110px;
+            }
+
+            /* Сближенные боковые фото для планшетов */
+            @keyframes slideInLeftPos2 {
+                to { left: 10%; transform: rotate(2deg); opacity: 1; }
+            }
+            @keyframes slideInRightPos2 {
+                to { right: 10%; transform: rotate(-2deg); opacity: 1; }
+            }
+        }
+
+            /* АДАПТИВНОСТЬ ДЛЯ ТЕЛЕФОНОВ (ОПТИМИЗИРОВАНО ПОД IPHONE) */
+        @media (max-width: 900px) {
+            body {
+                /* Используем динамическую высоту для Safari iOS */
+                height: 100dvh;
+                height: 100vh;
+
+                /* Разрешаем вертикальную прокрутку, если элементов много */
+                overflow-y: auto;
+
+                /* Включаем плавный скролл на iOS */
+                -webkit-overflow-scrolling: touch;
+
+                /* Выстраиваем всё сверху вниз */
+                flex-direction: column !important;
+                justify-content: flex-start !important;
+                align-items: center !important;
+
+                /* Безопасные отступы под челку и полосу хоум-бара iPhone */
+                padding: calc(20px + env(safe-area-inset-top)) 15px calc(30px + env(safe-area-inset-bottom)) 15px;
+                gap: 25px; /* Задаем одинаковое расстояние между блоками */
+            }
+
+            /* Сбрасываем абсолютное позиционирование для мобильной ленты */
+            .photo-block {
+                position: relative !important;
+                flex-direction: column !important;
+                animation: none !important;
+                opacity: 1 !important;
+                top: auto !important;
+                bottom: auto !important;
+                left: auto !important;
+                right: auto !important;
+                transform: none !important;
+                width: 100%;
+                max-width: 280px; /* Ограничиваем ширину на мобильных */
+            }
+
+            /* Возвращаем центральное письмо в общий поток */
+            .card {
+                position: relative !important;
+                order: -1; /* Переносит текст поздравления в самый верх страницы */
+                margin: 0 0 10px 0 !important;
+                width: 100%;
+                max-width: 400px;
+                transform: none !important;
+                animation: fadeInLetter 1s forwards ease-out;
+            }
+
+            @keyframes fadeInLetter {
+                to { transform: none; opacity: 1; }
+            }
+
+            /* Корректируем размеры рамок для экранов iPhone */
+            .frame-wrapper {
+                width: 160px !important;
+                height: 160px !important;
+            }
+
+            .lace-circle-bg {
+                width: 185px !important;
+                height: 185px !important;
+                border: 3px double rgba(255, 255, 255, 0.6) !important;
+                outline: 2px dashed rgba(255, 255, 255, 0.3) !important;
+                outline-offset: -8px !important;
+            }
+
+            .lace-frame {
+                width: 160px !important;
+                height: 160px !important;
+                padding: 10px !important;
+            }
+
+            .lace-frame::before {
+                display: none !important; /* Убираем мелкие пунктиры, чтобы не рябило */
+            }
+
+            /* Бумажная подпись под фотографией */
+            .photo-caption {
+                font-size: 0.95rem !important;
+                padding: 8px 16px !important;
+                margin: 12px 0 0 0 !important;
+                border: 1px solid #800000 !important;
+                max-width: 100% !important;
+                width: 100%;
+                white-space: normal !important;
+            }
+
+            /* Сбрасываем специфические боковые отступы */
+            .left-side .photo-caption,
+            .right-side .photo-caption {
+                margin: 12px 0 0 0 !important;
+                border-left: 1px solid #800000 !important;
+                border-right: 1px solid #800000 !important;
+                border-top: 3px solid #800000 !important; /* Делаем красивый акцент сверху плашки */
+            }
+
+            /* На смартфонах полностью скрываем фоновые центральные фото, чтобы не перегружать экран */
+            .center-photo-block {
+                display: none !important;
+            }
+        }
+    </style>
+</head>
+<body>
+
+    <!-- ЛЕВЫЕ КАРТОЧКИ (3 ШТУКИ) -->
+    <div class="photo-block left-side pos-1">
+        <div class="frame-wrapper">
+            <div class="lace-circle-bg"></div>
+            <div class="lace-frame vintage-paper">
+                <img src="left1.jpg" alt="Фото 1" onerror="this.src='https://unsplash.com'">
+            </div>
+        </div>
+        <div class="photo-caption vintage-paper">С чего всё началось?</div>
+    </div>
+    <div class="photo-block right-side pos-2">
+        <div class="frame-wrapper">
+            <div class="lace-circle-bg"></div>
+            <div class="lace-frame vintage-paper">
+                <img src="right2.jpg" alt="Фото 5" onerror="this.src='https://unsplash.com'">
+            </div>
+        </div>
+
+    </div>
+
+
+    <div class="photo-block left-side pos-3">
+        <div class="frame-wrapper">
+            <div class="lace-circle-bg"></div>
+            <div class="lace-frame vintage-paper">
+                <img src="left3.jpg" alt="Фото 3" onerror="this.src='https://unsplash.com'">
+            </div>
+        </div>
+        <div class="photo-caption vintage-paper"> Ты самый сильный и мужественный человек из всех, кого я знаю!</div>
+    </div>
+
+    <!-- ЦЕНТРАЛЬНЫЕ ВЫЕЗЖАЮЩИЕ ФОТО (БЕЗ ПОДПИСЕЙ) -->
+    <div class="center-photo-block top-center">
+        <div class="frame-wrapper">
+            <div class="lace-circle-bg"></div>
+            <div class="lace-frame vintage-paper">
+                <img src="center_top.jpg" alt="Фото центр верх" onerror="this.src='https://unsplash.com'">
+            </div>
+        </div>
+    </div>
+
+    <div class="center-photo-block bottom-center">
+        <div class="frame-wrapper">
+            <div class="lace-circle-bg"></div>
+            <div class="lace-frame vintage-paper">
+                <img src="center_bottom.jpg" alt="Фото центр низ" onerror="this.src='https://unsplash.com'">
+            </div>
+        </div>
+    </div>
+
+    <!-- ЦЕНТРАЛЬНОЕ ПИСЬМО -->
+    <div class="card vintage-paper">
+        <h1>С Днём Рождения!!!</h1>
+        <p>Желаю тебе крепчайшего здоровья и скорейшего выздоровления! Пусть весь нерв в работе пойдёт на спад, чтобы появилось время на спокойный отдых, который правда будет приносить тебе удовольствие! Ты всегда был, есть и будешь для меня примером для подражания, когда дело касается работы с коллективом и решения по-настоящему серьезных вопросов! И помни...</p>
+        <button class="btn" onclick="revealLove()">Нажми сюда</button>
+        <div id="loveMessage" class="hidden-message">Я тебя очень сильно люблю, папуль! ❤️</div>
+    </div>
+
+    <!-- ПРАВЫЕ КАРТОЧКИ (3 ШТУКИ) -->
+    <div class="photo-block right-side pos-1">
+        <div class="frame-wrapper">
+            <div class="lace-circle-bg"></div>
+            <div class="lace-frame vintage-paper">
+                <img src="right1.jpg" alt="Фото 4" onerror="this.src='https://unsplash.com'">
+            </div>
+        </div>
+        <div class="photo-caption vintage-paper">Спасибо тебе за то, что всегда был рядом, поддерживал и направлял меня!</div>
+    </div>
+
+    <div class="photo-block left-side pos-2">
+        <div class="frame-wrapper">
+            <div class="lace-circle-bg"></div>
+            <div class="lace-frame vintage-paper">
+                <img src="left2.jpg" alt="Фото 2" onerror="this.src='https://unsplash.com'">
+            </div>
+        </div>
+
+    </div>
+
+    <div class="photo-block right-side pos-3">
+        <div class="frame-wrapper">
+            <div class="lace-circle-bg"></div>
+            <div class="lace-frame vintage-paper">
+                <img src="right3.jpg" alt="Фото 6" onerror="this.src='https://unsplash.com'">
+            </div>
+        </div>
+        <div class="photo-caption vintage-paper">Азазелло</div>
+    </div>
+
+    <script>
+        function revealLove() {
+            const message = document.getElementById('loveMessage');
+            const button = document.querySelector('.btn');
+
+            message.classList.add('show');
+
+            button.style.opacity = '0';
+            button.style.pointerEvents = 'none';
+            setTimeout(() => {
+                button.style.display = 'none';
+            }, 300);
+        }
+    </script>
+</body>
+</html>
